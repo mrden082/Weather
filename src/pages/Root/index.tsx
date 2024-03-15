@@ -1,30 +1,37 @@
-import { useState } from "react";
+import React from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
 import CityList from "../../components/CityList";
 import { City } from "../../interface";
 
-export const loader = async () => {
-  const cities = await getCity();
+interface RootProps {
+  cities: City[];
+}
 
-  return { cities };
-};
+const Root: React.FC<RootProps> = ({ cities }) => {
+  const [filterWord, setFilterWord] = React.useState<string>("");
+  const [selectedCity, setSelectedCity] = React.useState<City | null>(
+    cities[0]
+  );
 
-const Root = () => {
-  const { cities } = useLoaderData() as {
-    cities: City[];
+  const filteredCities = cities.filter((city) =>
+    city.name.toLowerCase().includes(filterWord.toLowerCase())
+  );
+
+  const handleCitySelect = (city: City) => {
+    setSelectedCity(city);
   };
-  const [filterWord, setFilterWord] = useState<string>("");
 
   return (
     <div className="root-cont">
-      <div className="left-panel">
+      <div className="left panel">
         <CityList
-          cities={cities}
+          cities={filteredCities}
           filterWord={filterWord}
           setFilterWord={setFilterWord}
+          onCitySelect={handleCitySelect}
+          defaultCity={selectedCity}
         />
       </div>
-      <Outlet />
     </div>
   );
 };

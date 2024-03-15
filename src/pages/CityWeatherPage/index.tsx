@@ -1,13 +1,13 @@
-import { getWeather, getCity } from "../../dataWeathers";
+import { getWeather, getCity } from "../../components/dataWeathers";
 import { useLoaderData, LoaderFunctionArgs } from "react-router-dom";
 import { Weather, City } from "../../interface";
 import { Button } from "@mui/joy";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const weatherId = Number(params.weatherId) || 0;
-  const weather = await getWeather(weatherId);
-  const cityId = weather.cityId; // Получаем идентификатор города из полученных погодных данных
-  const city = await getCity(cityId); // Используем идентификатор города для получения данных о городе
+  const weather =getWeather(weatherId);
+  const cityId = weather.cityId;
+  const city = getCity(cityId);
 
   return { weather, city };
 };

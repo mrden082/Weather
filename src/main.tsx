@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Root, { loader as rootLoader } from "./pages/Root";
+import Root from "./pages/Root";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // import "@fontsource/inter";
 import "./index.css";
@@ -12,9 +12,8 @@ import CityWeatherPage, {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <Root cities={[]} />,
     errorElement: <ErrorPage />,
-    loader: rootLoader,
     children: [
       {
         path: "/contacts/:contactId",
