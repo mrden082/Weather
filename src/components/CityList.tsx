@@ -1,33 +1,21 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { City } from "../interface";
+import React from "react";
 
 interface CityListProps {
-  cities: City[];
-  filterWord: string;
-  setFilterWord: React.Dispatch<React.SetStateAction<string>>;
+  cities: string[];
+  onCitySelect: (city: string) => void;
 }
 
-const CityList = ({ cities, filterWord, setFilterWord }: CityListProps) => {
-  const filteredCities = cities.filter((city) =>
-    city.name.toLowerCase().includes(filterWord.toLowerCase())
-  );
-
+export const CityList: React.FC<CityListProps> = ({ cities, onCitySelect }) => {
   return (
-    <div className="city-list">
-      <input
-        className="search-input"
-        placeholder="Filter"
-        value={filterWord}
-        onChange={(e) => setFilterWord(e.target.value)}
-      />
-      {filteredCities.map((city) => (
-        <Link key={city.id} to={`/cities/${city.id}`}>
-          {city.name}
-        </Link>
-      ))}
+    <div>
+      <h2>Cities</h2>
+      <ul>
+        {cities.map((city) => (
+          <li key={city} onClick={() => onCitySelect(city)}>
+            {city}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
-
-export default CityList;

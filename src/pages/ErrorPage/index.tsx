@@ -1,5 +1,5 @@
-const ErrorPage = () => {
-  return <div>Error...</div>;
-};
+import React from "react";
 
-export default ErrorPage;
+export const ErrorPage: React.FC = () => {
+  return <div>404 Error: Page not found</div>;
+};

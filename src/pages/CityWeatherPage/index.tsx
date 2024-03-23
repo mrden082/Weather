@@ -1,35 +1,31 @@
-import { getWeather, getCity } from "../../components/dataWeathers";
-import { useLoaderData, LoaderFunctionArgs } from "react-router-dom";
-import { Weather, City } from "../../interface";
-import { Button } from "@mui/joy";
+import React from "react";
+import { useParams } from "react-router-dom";
+import { WeatherPanel } from "../../components/WeatherPanel";
+import { useWeatherForecast } from "../../hooks/useWeatherForecast";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const weatherId = Number(params.weatherId) || 0;
-  const weather =getWeather(weatherId);
-  const cityId = weather.cityId;
-  const city = getCity(cityId);
+interface RouteParams {
+  city: string;
+  latitude: string;
+  longitude: string;
+}
 
-  return { weather, city };
-};
+export const CityWeatherPage: React.FC = () => {
+  const { city, latitude, longitude } = useParams<RouteParams>();
 
-const CityWeatherPage = () => {
-  const { weather, city } = useLoaderData() as {
-    weather: Weather;
-    city: City;
-  };
+  const { data: weatherForecast, isLoading: isWeatherLoading } =
+    useWeatherForecast(parseFloat(latitude), parseFloat(longitude));
+
+  if (isWeatherLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!weatherForecast) {
+    return <div>No data</div>;
+  }
 
   return (
-    <div className="contact-cont">
-      <h1>Weather in {city.name}</h1>
-      <div className="weather__details">
-        <h2>Weather Details</h2>
-        <div>Temperature: {weather.temperature}</div>
-        <div>Description: {weather.description}</div>
-        <div>Humidity: {weather.humidity}</div>
-        <div>Wind Speed: {weather.windSpeed}</div>
-      </div>
+    <div>
+      <WeatherPanel city={city} weatherForecast={weatherForecast} />
     </div>
   );
 };
-
-export default CityWeatherPage;

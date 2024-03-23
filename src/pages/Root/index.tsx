@@ -1,39 +1,29 @@
 import React from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
-import CityList from "../../components/CityList";
-import { City } from "../../interface";
+import { SearchBar } from "../../components/SearchBar";
+import { CityList } from "../../components/CityList";
+import { useCitySearch } from "../../hooks/useCitySearch";
 
-interface RootProps {
-  cities: City[];
-}
+export const Root: React.FC = () => {
+  const { data: cities, isLoading: isCitiesLoading } = useCitySearch("");
 
-const Root: React.FC<RootProps> = ({ cities }) => {
-  const [filterWord, setFilterWord] = React.useState<string>("");
-  const [selectedCity, setSelectedCity] = React.useState<City | null>(
-    cities[0]
-  );
-
-  const filteredCities = cities.filter((city) =>
-    city.name.toLowerCase().includes(filterWord.toLowerCase())
-  );
-
-  const handleCitySelect = (city: City) => {
-    setSelectedCity(city);
+  const handleSearch = (query: string) => {
+    // Обработать поиск городов и отобразить результаты в CityList
   };
 
+  if (isCitiesLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!cities) {
+    return <div>No data</div>;
+  }
+
   return (
-    <div className="root-cont">
-      <div className="left panel">
-        <CityList
-          cities={filteredCities}
-          filterWord={filterWord}
-          setFilterWord={setFilterWord}
-          onCitySelect={handleCitySelect}
-          defaultCity={selectedCity}
-        />
-      </div>
+    <div>
+      <SearchBar onSearch={handleSearch} />
+      <CityList cities={cities} onCitySelect={function (): void {
+        throw new Error("Function not implemented.");
+      } } />
     </div>
   );
 };
-
-export default Root;
